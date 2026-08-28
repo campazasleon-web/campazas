@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campazas Data — Observatorio digital abierto</title>
+<meta name="description" content="Observatorio de datos abierto sobre Campazas (León). Datos verificables, con fuente y fecha, sobre demografía, meteorología, patrimonio e historia local.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1c2318;
+    --bg-alt: #232b1d;
+    --panel: #262f20;
+    --ink: #eae6d6;
+    --ink-dim: #a3ab8f;
+    --gold: #c9a227;
+    --brick: #a85c32;
+    --line: rgba(234,230,214,0.14);
+    --line-strong: rgba(234,230,214,0.28);
+    --max: 1080px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Source Serif 4", Georgia, serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .mono{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    letter-spacing:0.04em;
+  }
+
+  a{color:inherit;}
+
+  .wrap{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- topographic texture ---------- */
+  .contours{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:0.05;
+    z-index:0;
+    background-image:
+      repeating-radial-gradient(circle at 18% 24%, transparent 0, transparent 38px, var(--gold) 39px, transparent 40px),
+      repeating-radial-gradient(circle at 82% 68%, transparent 0, transparent 52px, var(--gold) 53px, transparent 54px);
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:rgba(28,35,24,0.86);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 24px;
+  }
+  .wordmark{
+    font-size:14px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+  }
+  .wordmark span{color:var(--gold);}
+  .navlinks{
+    display:flex;
+    gap:28px;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .navlinks a{
+    text-decoration:none;
+    color:var(--ink-dim);
+    transition:color .2s ease;
+  }
+  .navlinks a:hover, .navlinks a:focus-visible{color:var(--gold);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    z-index:1;
+    padding:88px 0 72px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:56px;
+    align-items:start;
+  }
+  .eyebrow{
+    font-size:12px;
+    color:var(--gold);
+    text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  h1{
+    font-family:"IBM Plex Mono", monospace;
+    font-weight:700;
+    font-size:clamp(32px, 4.6vw, 52px);
+    line-height:1.08;
+    margin:0 0 22px;
+    letter-spacing:-0.01em;
+  }
+  .lede{
+    font-size:18px;
+    color:var(--ink-dim);
+    max-width:52ch;
+    margin:0 0 32px;
+  }
+  .lede strong{color:var(--ink);}
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    display:inline-block;
+    padding:12px 22px;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    text-decoration:none;
+    border-radius:2px;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .btn-primary{
+    background:var(--gold);
+    color:#1c2318;
+    font-weight:600;
+  }
+  .btn-primary:hover{transform:translateY(-1px); background:#dcb534;}
+  .btn-ghost{
+    border:1px solid var(--line-strong);
+    color:var(--ink);
+  }
+  .btn-ghost:hover{border-color:var(--gold); color:var(--gold);}
+
+  /* ---------- ficha de estación ---------- */
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line-strong);
+    padding:26px 26px 20px;
+  }
+  .card-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    border-bottom:1px dashed var(--line-strong);
+    padding-bottom:14px;
+    margin-bottom:18px;
+  }
+  .card-title{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-dim);
+  }
+  .card-tag{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11px;
+    color:var(--brick);
+  }
+  .field-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px 20px;
+  }
+  .field{border-bottom:1px solid var(--line); padding-bottom:10px;}
+  .field-label{
+    display:block;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink-dim);
+    margin-bottom:5px;
+  }
+  .field-value{font-size:15px;}
+  .field-value.pending{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12.5px;
+    color:var(--brick);
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+  }
+  .card-note{
+    margin-top:16px;
+    font-size:12.5px;
+    color:var(--ink-dim);
+    font-family:"IBM Plex Mono", monospace;
+    line-height:1.6;
+  }
+
+  /* ---------- principles ---------- */
+  section{position:relative; z-index:1; padding:72px 0;}
+  .section-head{margin-bottom:40px; max-width:60ch;}
+  h2{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:clamp(22px, 2.6vw, 30px);
+    margin:6px 0 0;
+  }
+  .principles{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .principle{
+    background:var(--bg);
+    padding:26px 22px;
+  }
+  .principle-tag{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11px;
+    color:var(--gold);
+    letter-spacing:0.08em;
+    display:block;
+    margin-bottom:12px;
+  }
+  .principle p{
+    margin:0;
+    font-size:14.5px;
+    color:var(--ink-dim);
+  }
+
+  /* ---------- roadmap ---------- */
+  .roadmap{border-top:1px solid var(--line); background:var(--bg-alt);}
+  .phase{
+    display:grid;
+    grid-template-columns:64px 1fr auto;
+    gap:20px;
+    align-items:start;
+    padding:22px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .phase:last-child{border-bottom:none;}
+  .phase-num{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:22px;
+    color:var(--gold);
+    font-weight:700;
+  }
+  .phase-title{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .phase-desc{font-size:14.5px; color:var(--ink-dim); max-width:60ch;}
+  .status{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    padding:5px 10px;
+    border:1px solid var(--line-strong);
+    white-space:nowrap;
+    height:fit-content;
+  }
+  .status.active{color:var(--gold); border-color:var(--gold);}
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:44px 0 32px;
+  }
+  .footer-grid{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:24px;
+    font-size:13px;
+    color:var(--ink-dim);
+  }
+  .footer-grid a{
+    text-decoration:none;
+    color:var(--gold);
+  }
+  .footer-grid a:hover{text-decoration:underline;}
+  .disclaimer{
+    margin-top:28px;
+    padding-top:20px;
+    border-top:1px dashed var(--line);
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11.5px;
+    color:var(--ink-dim);
+    line-height:1.7;
+  }
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .reveal{opacity:1; transform:none; transition:none;}
+  }
+
+  @media (max-width: 860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .principles{grid-template-columns:repeat(2, 1fr);}
+    .navlinks{gap:16px;}
+  }
+  @media (max-width: 560px){
+    .principles{grid-template-columns:1fr;}
+    .field-grid{grid-template-columns:1fr;}
+    .phase{grid-template-columns:40px 1fr; }
+    .status{grid-column:2; justify-self:start;}
+    .nav{flex-direction:column; align-items:flex-start; gap:10px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="contours" aria-hidden="true"></div>
+
+<header>
+  <div class="nav wrap">
+    <div class="wordmark">CAMPAZAS <span>· DATA</span></div>
+    <nav class="navlinks">
+      <a href="#proyecto">Proyecto</a>
+      <a href="#hoja-de-ruta">Hoja de ruta</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow mono">OBSERVATORIO ABIERTO — LEÓN, ESPAÑA</div>
+        <h1>Campazas, documentado con datos reales.</h1>
+        <p class="lede">
+          No es una web municipal ni un blog. Es un archivo de datos <strong>verificables</strong> sobre un municipio pequeño de Tierra de Campos — cada dato con su fuente, su fecha y su nivel de fiabilidad.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://github.com/" target="_blank" rel="noopener">Ver el repositorio</a>
+          <a class="btn btn-ghost" href="#proyecto">Cómo funciona</a>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-head">
+          <span class="card-title mono">Ficha del municipio</span>
+          <span class="card-tag">EN VERIFICACIÓN</span>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <span class="field-label">Provincia</span>
+            <span class="field-value">León</span>
+          </div>
+          <div class="field">
+            <span class="field-label">Comunidad</span>
+            <span class="field-value">Castilla y León</span>
+          </div>
+          <div class="field">
+            <span class="field-label">Comarca</span>
+            <span class="field-value">Tierra de Campos</span>
+          </div>
+          <div class="field">
+            <span class="field-label">Coordenadas</span>
+            <span class="field-value pending">Pendiente · Fase 0</span>
+          </div>
+          <div class="field">
+            <span class="field-label">Altitud</span>
+            <span class="field-value pending">Pendiente · Fase 0</span>
+          </div>
+          <div class="field">
+            <span class="field-label">Población</span>
+            <span class="field-value pending">Pendiente · INE</span>
+          </div>
+        </div>
+        <p class="card-note">→ Todo dato mostrado aquí llevará fuente y fecha. Lo que no está verificado se marca como pendiente: no se inventa.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="proyecto">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow mono">CUATRO PRINCIPIOS</div>
+        <h2>Cómo se construye esto</h2>
+      </div>
+      <div class="principles reveal">
+        <div class="principle">
+          <span class="principle-tag">DATOS</span>
+          <p>Cada dato lleva fuente, fecha, método de obtención y nivel de fiabilidad.</p>
+        </div>
+        <div class="principle">
+          <span class="principle-tag">TRANSPARENCIA</span>
+          <p>Se distingue siempre entre dato oficial, estimación y contenido editorial.</p>
+        </div>
+        <div class="principle">
+          <span class="principle-tag">AUTOMATIZACIÓN</span>
+          <p>Lo que puede actualizarse solo, se actualiza solo. El trabajo manual se reserva para historia, patrimonio y fotografía.</p>
+        </div>
+        <div class="principle">
+          <span class="principle-tag">MEMORIA</span>
+          <p>El objetivo no es solo el presente: también preservar fotografías, testimonios y tradiciones.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="hoja-de-ruta" class="roadmap">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow mono">ESTADO ACTUAL</div>
+        <h2>Hoja de ruta</h2>
+      </div>
+
+      <div class="reveal">
+        <div class="phase">
+          <span class="phase-num">00</span>
+          <div>
+            <div class="phase-title">Verificación de fuentes</div>
+            <div class="phase-desc">Confirmar qué datos de INE, Ayuntamiento y AEMET son realmente accesibles antes de diseñar el modelo de datos.</div>
+          </div>
+          <span class="status active">En curso</span>
+        </div>
+        <div class="phase">
+          <span class="phase-num">01</span>
+          <div>
+            <div class="phase-title">MVP</div>
+            <div class="phase-desc">Población, meteorología, mapa base, arquitectura de datos y pipeline automatizado.</div>
+          </div>
+          <span class="status">Planificada</span>
+        </div>
+        <div class="phase">
+          <span class="phase-num">02</span>
+          <div>
+            <div class="phase-title">Ampliación</div>
+            <div class="phase-desc">Vivienda, patrimonio, historia, eventos y archivo fotográfico — condicionado a que existan fuentes verificables.</div>
+          </div>
+          <span class="status">Futura</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>Fuentes previstas: INE · AEMET · Catastro · Ayuntamiento de Campazas</div>
+      <a href="https://github.com/" target="_blank" rel="noopener">Código en GitHub →</a>
+    </div>
+    <p class="disclaimer">
+      Proyecto en construcción. Esta página es una base estructural: los campos marcados como "pendiente" no tienen todavía un dato verificado detrás, y no se muestran cifras hasta confirmarlas.
+    </p>
+  </div>
+</footer>
+
+<script>
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  }
+</script>
+
+</body>
+</html>
