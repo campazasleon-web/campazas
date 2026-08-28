@@ -1,0 +1,181 @@
+{
+  "fuente": "INE, tabla 29005",
+  "municipio_cod": "24032",
+  "actualizado": null,
+  "datos": [
+    {
+      "anio": 1996,
+      "total": 182.0,
+      "hombres": 90.0,
+      "mujeres": 92.0
+    },
+    {
+      "anio": 1998,
+      "total": 179.0,
+      "hombres": 90.0,
+      "mujeres": 89.0
+    },
+    {
+      "anio": 1999,
+      "total": 169.0,
+      "hombres": 87.0,
+      "mujeres": 82.0
+    },
+    {
+      "anio": 2000,
+      "total": 163.0,
+      "hombres": 84.0,
+      "mujeres": 79.0
+    },
+    {
+      "anio": 2001,
+      "total": 156.0,
+      "hombres": 82.0,
+      "mujeres": 74.0
+    },
+    {
+      "anio": 2002,
+      "total": 153.0,
+      "hombres": 80.0,
+      "mujeres": 73.0
+    },
+    {
+      "anio": 2003,
+      "total": 151.0,
+      "hombres": 80.0,
+      "mujeres": 71.0
+    },
+    {
+      "anio": 2004,
+      "total": 152.0,
+      "hombres": 81.0,
+      "mujeres": 71.0
+    },
+    {
+      "anio": 2005,
+      "total": 166.0,
+      "hombres": 87.0,
+      "mujeres": 79.0
+    },
+    {
+      "anio": 2006,
+      "total": 173.0,
+      "hombres": 91.0,
+      "mujeres": 82.0
+    },
+    {
+      "anio": 2007,
+      "total": 155.0,
+      "hombres": 79.0,
+      "mujeres": 76.0
+    },
+    {
+      "anio": 2008,
+      "total": 153.0,
+      "hombres": 77.0,
+      "mujeres": 76.0
+    },
+    {
+      "anio": 2009,
+      "total": 155.0,
+      "hombres": 76.0,
+      "mujeres": 79.0
+    },
+    {
+      "anio": 2010,
+      "total": 154.0,
+      "hombres": 75.0,
+      "mujeres": 79.0
+    },
+    {
+      "anio": 2011,
+      "total": 146.0,
+      "hombres": 71.0,
+      "mujeres": 75.0
+    },
+    {
+      "anio": 2012,
+      "total": 151.0,
+      "hombres": 76.0,
+      "mujeres": 75.0
+    },
+    {
+      "anio": 2013,
+      "total": 139.0,
+      "hombres": 70.0,
+      "mujeres": 69.0
+    },
+    {
+      "anio": 2014,
+      "total": 135.0,
+      "hombres": 66.0,
+      "mujeres": 69.0
+    },
+    {
+      "anio": 2015,
+      "total": 139.0,
+      "hombres": 67.0,
+      "mujeres": 72.0
+    },
+    {
+      "anio": 2016,
+      "total": 122.0,
+      "hombres": 58.0,
+      "mujeres": 64.0
+    },
+    {
+      "anio": 2017,
+      "total": 121.0,
+      "hombres": 58.0,
+      "mujeres": 63.0
+    },
+    {
+      "anio": 2018,
+      "total": 123.0,
+      "hombres": 55.0,
+      "mujeres": 68.0
+    },
+    {
+      "anio": 2019,
+      "total": 119.0,
+      "hombres": 55.0,
+      "mujeres": 64.0
+    },
+    {
+      "anio": 2020,
+      "total": 111.0,
+      "hombres": 53.0,
+      "mujeres": 58.0
+    },
+    {
+      "anio": 2021,
+      "total": 113.0,
+      "hombres": 54.0,
+      "mujeres": 59.0
+    },
+    {
+      "anio": 2022,
+      "total": 106.0,
+      "hombres": 51.0,
+      "mujeres": 55.0
+    },
+    {
+      "anio": 2023,
+      "total": 109.0,
+      "hombres": 55.0,
+      "mujeres": 54.0
+    },
+    {
+      "anio": 2024,
+      "total": 107.0,
+      "hombres": 55.0,
+      "mujeres": 52.0
+    },
+    {
+      "anio": 2025,
+      "total": 110.0,
+      "hombres": 58.0,
+      "mujeres": 52.0
+    }
+  ]
+}
