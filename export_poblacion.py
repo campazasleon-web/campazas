@@ -37,7 +37,7 @@ def exportar():
         for anio, datos in sorted(por_anio.items())
     ]
 
-    with open(OUT_PATH, "w", encoding="utf-8") as f:
+    with open(OUT_PATH, "w", encoding="utf-8", newline="\n") as f:
         json.dump(
             {
                 "fuente": "INE, tabla 29005",
