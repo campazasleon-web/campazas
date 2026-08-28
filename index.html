@@ -381,18 +381,26 @@
           </div>
           <div class="field">
             <span class="field-label">Coordenadas</span>
-            <span class="field-value pending">Pendiente · Fase 0</span>
+            <span class="field-value">42°08'31" N, 5°29'30" O</span>
           </div>
           <div class="field">
             <span class="field-label">Altitud</span>
-            <span class="field-value pending">Pendiente · Fase 0</span>
+            <span class="field-value">770 m</span>
+          </div>
+          <div class="field">
+            <span class="field-label">Superficie</span>
+            <span class="field-value">20,88 km²</span>
+          </div>
+          <div class="field">
+            <span class="field-label">Densidad</span>
+            <span class="field-value" id="ficha-densidad">Calculando…</span>
           </div>
           <div class="field">
             <span class="field-label">Población</span>
             <span class="field-value" id="ficha-poblacion">Cargando · INE</span>
           </div>
         </div>
-        <p class="card-note">→ Todo dato mostrado aquí llevará fuente y fecha. Lo que no está verificado se marca como pendiente: no se inventa.</p>
+        <p class="card-note">→ Coordenadas, altitud y superficie: Ayuntamiento de Campazas. Población: INE (automatizado). Densidad: calculada a partir de ambas. Lo que no está verificado se marca como pendiente: no se inventa.</p>
       </div>
     </div>
   </section>
@@ -486,6 +494,10 @@
       <div>Fuentes previstas: INE · AEMET · Catastro · Ayuntamiento de Campazas</div>
       <a href="https://github.com/" target="_blank" rel="noopener">Código en GitHub →</a>
     </div>
+    <p class="disclaimer" style="margin-top:20px; border-top:none; padding-top:0;">
+      Ayuntamiento de Campazas · Calle Los Guzmanes, s/n · 24221 Campazas (León)<br>
+      Tel. 987 753 460 · <a href="mailto:info@aytocampazas.es" style="color:var(--gold);">info@aytocampazas.es</a>
+    </p>
     <p class="disclaimer">
       Proyecto en construcción. Esta página es una base estructural: los campos marcados como "pendiente" no tienen todavía un dato verificado detrás, y no se muestran cifras hasta confirmarlas.
     </p>
@@ -503,6 +515,10 @@
       const ultimo = datos[datos.length - 1];
       document.getElementById('ficha-poblacion').textContent = `${ultimo.total} hab. (${ultimo.anio}) · INE`;
       document.getElementById('chart-status').textContent = `${datos[0].anio}–${ultimo.anio}`;
+
+      const SUPERFICIE_KM2 = 20.88; // Ayuntamiento de Campazas — dato fijo
+      const densidad = (ultimo.total / SUPERFICIE_KM2).toFixed(2).replace('.', ',');
+      document.getElementById('ficha-densidad').textContent = `${densidad} hab/km² (${ultimo.anio})`;
 
       const w = 640, h = 220, padL = 40, padR = 16, padT = 16, padB = 28;
       const valores = datos.map(d => d.total);
@@ -541,6 +557,7 @@
         `<span class="mono" style="font-size:12px; color:var(--brick);">No se pudo cargar data/poblacion.json (${err.message}). ¿Ya lo generaste con export_poblacion.py y lo subiste al repo?</span>`;
       document.getElementById('chart-status').textContent = 'ERROR';
       document.getElementById('ficha-poblacion').textContent = 'Pendiente · INE';
+      document.getElementById('ficha-densidad').textContent = 'Pendiente · INE';
     });
 
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
