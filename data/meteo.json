@@ -1,0 +1,31 @@
+{
+  "fuente": "AEMET OpenData",
+  "estacion": {
+    "nombre": "Valencia de Don Juan",
+    "distancia_km": 17.1
+  },
+  "actual": {
+    "fecha_hora": "2026-08-31T09:00:00+0000",
+    "temperatura": 16.4,
+    "humedad": 73.0,
+    "precipitacion": 0.0,
+    "viento_medio": 3.2,
+    "viento_racha": 5.2
+  },
+  "tendencia": [
+    {
+      "fecha": "2026-08-30",
+      "temp_media": 14.9,
+      "temp_min": 14.3,
+      "temp_max": 16.8,
+      "precipitacion_total": 0.0
+    },
+    {
+      "fecha": "2026-08-31",
+      "temp_media": 12.2,
+      "temp_min": 9.4,
+      "temp_max": 16.4,
+      "precipitacion_total": 0.0
+    }
+  ]
+}
