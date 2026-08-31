@@ -340,6 +340,7 @@
     <nav class="navlinks">
       <a href="#proyecto">Proyecto</a>
       <a href="#poblacion">Población</a>
+      <a href="#meteo">Tiempo</a>
       <a href="#hoja-de-ruta">Hoja de ruta</a>
       <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
     </nav>
@@ -451,6 +452,52 @@
     </div>
   </section>
 
+  <section id="meteo">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow mono">AEMET · ESTACIÓN VALENCIA DE DON JUAN (17 KM)</div>
+        <h2>El tiempo cerca de Campazas</h2>
+      </div>
+
+      <div class="card reveal" style="margin-bottom:20px;">
+        <div class="card-head">
+          <span class="card-title mono">Última lectura</span>
+          <span class="card-tag" id="meteo-hora">CARGANDO</span>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <span class="field-label">Temperatura</span>
+            <span class="field-value" id="meteo-temp">—</span>
+          </div>
+          <div class="field">
+            <span class="field-label">Humedad</span>
+            <span class="field-value" id="meteo-humedad">—</span>
+          </div>
+          <div class="field">
+            <span class="field-label">Precipitación (última hora)</span>
+            <span class="field-value" id="meteo-precip">—</span>
+          </div>
+          <div class="field">
+            <span class="field-label">Viento (medio / racha)</span>
+            <span class="field-value" id="meteo-viento">—</span>
+          </div>
+        </div>
+        <p class="card-note">→ No es una medición en Campazas mismo: es la estación más cercana con datos reales, a 17,1 km. Se muestra así de forma explícita, no como si fuera local.</p>
+      </div>
+
+      <div class="card reveal" id="meteo-chart-card">
+        <div class="card-head">
+          <span class="card-title mono">Temperatura media diaria</span>
+          <span class="card-tag" id="meteo-chart-status">CARGANDO</span>
+        </div>
+        <div id="meteo-chart-container" style="min-height:220px; display:flex; align-items:center; justify-content:center;">
+          <span class="mono" style="font-size:12px; color:var(--ink-dim);">Cargando data/meteo.json…</span>
+        </div>
+        <p class="card-note">Fuente: AEMET OpenData. La tendencia se acumula automáticamente con cada ejecución del pipeline — cuantos más días pasen, más historial se acumula.</p>
+      </div>
+    </div>
+  </section>
+
   <section id="hoja-de-ruta" class="roadmap">
     <div class="wrap">
       <div class="section-head reveal">
@@ -505,6 +552,65 @@
 </footer>
 
 <script>
+  // ---- Meteorología (lee data/meteo.json, sin librerías) ----
+  fetch('data/meteo.json')
+    .then(r => { if (!r.ok) throw new Error('No se encontró data/meteo.json'); return r.json(); })
+    .then(json => {
+      const actual = json.actual;
+      const tendencia = json.tendencia || [];
+
+      const fecha = new Date(actual.fecha_hora);
+      const horaLocal = fecha.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+      document.getElementById('meteo-hora').textContent = horaLocal;
+      document.getElementById('meteo-temp').textContent = `${actual.temperatura} °C`;
+      document.getElementById('meteo-humedad').textContent = `${actual.humedad} %`;
+      document.getElementById('meteo-precip').textContent = `${actual.precipitacion} mm`;
+      document.getElementById('meteo-viento').textContent = `${actual.viento_medio} / ${actual.viento_racha} m/s`;
+
+      if (!tendencia.length) throw new Error('meteo.json no tiene tendencia todavía');
+
+      document.getElementById('meteo-chart-status').textContent = `${tendencia[0].fecha} – ${tendencia[tendencia.length - 1].fecha}`;
+
+      const w = 640, h = 220, padL = 40, padR = 16, padT = 16, padB = 28;
+      const valores = tendencia.map(d => d.temp_media).filter(v => v !== null);
+      const minV = Math.min(...valores), maxV = Math.max(...valores);
+      const x = i => padL + (tendencia.length === 1 ? (w - padL - padR) / 2 : (i / (tendencia.length - 1)) * (w - padL - padR));
+      const y = v => padT + (1 - (v - minV) / (maxV - minV || 1)) * (h - padT - padB);
+
+      const puntos = tendencia.map((d, i) => `${x(i)},${y(d.temp_media)}`).join(' ');
+
+      const ticksY = [minV, Math.round((minV + maxV) / 2), maxV];
+      const ticksYSvg = ticksY.map(v => `
+        <line x1="${padL}" y1="${y(v)}" x2="${w - padR}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/>
+        <text x="${padL - 8}" y="${y(v) + 4}" text-anchor="end" class="chart-label">${v}°</text>
+      `).join('');
+
+      const step = Math.max(1, Math.round(tendencia.length / 6));
+      const ticksXSvg = tendencia.map((d, i) => {
+        if (i % step !== 0 && i !== tendencia.length - 1) return '';
+        return `<text x="${x(i)}" y="${h - 8}" text-anchor="middle" class="chart-label">${d.fecha.slice(5)}</text>`;
+      }).join('');
+
+      const svgMeteo = `
+        <svg viewBox="0 0 ${w} ${h}" width="100%" style="overflow:visible; font-family:'IBM Plex Mono',monospace;">
+          <style>.chart-label{ font-size:10px; fill:var(--ink-dim); }</style>
+          ${ticksYSvg}
+          <polyline points="${puntos}" fill="none" stroke="var(--brick)" stroke-width="2"/>
+          ${tendencia.map((d, i) => `<circle cx="${x(i)}" cy="${y(d.temp_media)}" r="2.5" fill="var(--brick)"><title>${d.fecha}: ${d.temp_media}°C (min ${d.temp_min}°, max ${d.temp_max}°)</title></circle>`).join('')}
+          ${ticksXSvg}
+        </svg>`;
+
+      document.getElementById('meteo-chart-container').innerHTML = svgMeteo;
+      document.getElementById('meteo-chart-container').style.display = 'block';
+    })
+    .catch(err => {
+      ['meteo-hora'].forEach(id => document.getElementById(id).textContent = 'ERROR');
+      ['meteo-temp', 'meteo-humedad', 'meteo-precip', 'meteo-viento'].forEach(id => document.getElementById(id).textContent = 'Pendiente');
+      document.getElementById('meteo-chart-container').innerHTML =
+        `<span class="mono" style="font-size:12px; color:var(--brick);">No se pudo cargar data/meteo.json (${err.message}).</span>`;
+      document.getElementById('meteo-chart-status').textContent = 'ERROR';
+    });
+
   // ---- Gráfico de población (lee data/poblacion.json, sin librerías) ----
   fetch('data/poblacion.json')
     .then(r => { if (!r.ok) throw new Error('No se encontró data/poblacion.json'); return r.json(); })
