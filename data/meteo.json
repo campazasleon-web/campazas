@@ -5,19 +5,19 @@
     "distancia_km": 17.1
   },
   "actual": {
-    "fecha_hora": "2026-09-29T15:00:00+0000",
-    "temperatura": 20.1,
-    "humedad": 65.0,
+    "fecha_hora": "2026-09-29T20:00:00+0000",
+    "temperatura": 19.8,
+    "humedad": 60.0,
     "precipitacion": 0.0,
-    "viento_medio": 6.5,
-    "viento_racha": 11.8
+    "viento_medio": 6.2,
+    "viento_racha": 9.6
   },
   "tendencia": [
     {
       "fecha": "2026-09-29",
-      "temp_media": 16.6,
-      "temp_min": 14.4,
-      "temp_max": 20.1,
+      "temp_media": 18.7,
+      "temp_min": 15.4,
+      "temp_max": 21.5,
       "precipitacion_total": 1.2
     }
   ]
