@@ -5,27 +5,20 @@
     "distancia_km": 17.1
   },
   "actual": {
-    "fecha_hora": "2026-11-21T03:00:00+0000",
-    "temperatura": 8.0,
-    "humedad": 88.0,
-    "precipitacion": 1.0,
-    "viento_medio": 1.6,
-    "viento_racha": 2.5
+    "fecha_hora": "2026-11-21T12:00:00+0000",
+    "temperatura": 10.2,
+    "humedad": 93.0,
+    "precipitacion": 0.8,
+    "viento_medio": 4.2,
+    "viento_racha": 7.1
   },
   "tendencia": [
     {
-      "fecha": "2026-11-20",
-      "temp_media": 9.9,
-      "temp_min": 9.4,
-      "temp_max": 11.3,
-      "precipitacion_total": 2.4
-    },
-    {
       "fecha": "2026-11-21",
-      "temp_media": 8.5,
-      "temp_min": 8.0,
-      "temp_max": 9.5,
-      "precipitacion_total": 3.8
+      "temp_media": 8.7,
+      "temp_min": 7.8,
+      "temp_max": 10.2,
+      "precipitacion_total": 5.2
     }
   ]
 }
